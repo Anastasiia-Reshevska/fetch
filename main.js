@@ -27,7 +27,7 @@
         alert(error)
       });
 
-  fetch(url, {
+  fetch(url + "posts", {
     method: "POST",
     body: JSON.stringify({
       title: "foo",
@@ -76,8 +76,8 @@
   }
 
   function addClick() {
-    const allButtons = document.querySelector(`[data-id]`);
-    // console.log(allButtons);
+    const allButtons = document.querySelectorAll(`[data-id]`);
+    console.log(allButtons);
     if (!allButtons || allButtons.length === 0) return null;
 
     allButtons.forEach((button) => {
