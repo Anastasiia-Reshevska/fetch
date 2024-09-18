@@ -1,14 +1,18 @@
 (function () {
-  fetch("https://jsonplaceholder.typicode.com/posts")
+    const url = "https://jsonplaceholder.typicode.com/";
+    fetch(url + "posts")
     .then((response) => response.json())
     .then((json) => {
       json.forEach((element) => {
         createCard(element);
       });
       addClick();
-    });
+    })
+    .catch((error) => {
+        alert(error)
+      });
 
-  fetch("https://jsonplaceholder.typicode.com/posts/1", {
+  fetch(url + "posts/1", {
     method: "PATCH",
     body: JSON.stringify({
       title: "foo",
@@ -18,9 +22,12 @@
     },
   })
     .then((response) => response.json())
-    .then((json) => alert('В первом элементе успешно обновился title'));
+    .then((json) => alert("В первом элементе успешно обновился title"))
+    .catch((error) => {
+        alert(error)
+      });
 
-  fetch("https://jsonplaceholder.typicode.com/posts", {
+  fetch(url, {
     method: "POST",
     body: JSON.stringify({
       title: "foo",
@@ -32,18 +39,23 @@
     },
   })
     .then((response) => response.json())
-    .then((json) => alert('Добавился 101 элемент'));
+    .then((json) => alert("Добавился 101 элемент"))
+    .catch((error) => {
+        alert(error)
+      });
 
   function createCard(item) {
-    const colSm4 = document.createElement("div");
+    const cardWrapper = document.createElement("div");
     const row = document.getElementById("row");
+    if (!row) return null;
+
     const card = document.createElement("div");
     const cardBody = document.createElement("div");
-    const cardTitle = document.createElement("div");
-    const cardText = document.createElement("div");
-    const cardButton = document.createElement("div");
+    const cardTitle = document.createElement("h4");
+    const cardText = document.createElement("p");
+    const cardButton = document.createElement("button");
 
-    colSm4.className = "col-sm-4";
+    cardWrapper.className = "col-sm-4";
     card.className = "card";
     cardBody.className = "card-body";
     cardTitle.className = "card-title";
@@ -51,12 +63,12 @@
     cardButton.className = "btn btn-danger";
     cardButton.dataset.id = item.id;
 
-    cardTitle.innerHTML = item.title;
-    cardText.innerHTML = item.body;
+    cardTitle.innerHTML = item.title || '';
+    cardText.innerHTML = item.body || '';
     cardButton.innerHTML = "delete";
 
-    row.append(colSm4);
-    colSm4.append(card);
+    row.append(cardWrapper);
+    cardWrapper.append(card);
     card.append(cardBody);
     cardBody.append(cardTitle);
     cardBody.append(cardText);
@@ -64,17 +76,21 @@
   }
 
   function addClick() {
-    const allButtons = document.querySelectorAll(`[data-id]`);
+    const allButtons = document.querySelector(`[data-id]`);
+    // console.log(allButtons);
     if (!allButtons || allButtons.length === 0) return null;
 
     allButtons.forEach((button) => {
       button.addEventListener("click", function (e) {
-        fetch("https://jsonplaceholder.typicode.com/posts/1", {
+        fetch(url + "posts/" + e.target.dataset.id, {
           method: "DELETE",
         })
         .then((json) => {
           const col = e.target.closest(".col-sm-4");
-          col.remove();
+          col.remove()
+          .catch((error) => {
+        alert(error)
+      });
         });
       });
     });
